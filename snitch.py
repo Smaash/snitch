@@ -65,7 +65,7 @@ def find(dork):
 				outfile = open(output, "a")
 				outfile.write(y+"\n")
 				outfile.close()
-	except TypeError:
+	except:
 		print "[!] Temporary blocked by google... "
 		sys.exit(0)
 
@@ -117,10 +117,8 @@ def dork(url, dork):
 	)
 
 	dorkfile = (
-	'intitle:index.of .bash_history ',
-	'intitle:index.of ws_ftp.ini ',
 	'inurl:"smb.conf" intext:"workgroup" ext:conf ',
-	'intitle:"Index of" .mysql_history ',
+	'intitle:"Index of" .mysql_history OR intitle:index.of ws_ftp.ini OR intitle:index.of .bash_history ',
 	'"Index of /backup" ',
 	'intitle:"Index of ',
 	'inurl:server-status intext:"Apache" ',
@@ -129,10 +127,9 @@ def dork(url, dork):
 	'"# phpMyAdmin MySQL-Dump"  "INSERT INTO" -"the" ext:sql ',
 	'intext:"# Dumping data for table" ',
 	'ext:url +inurl:"ftp://"  +inurl:"@" ',
-	'inurl:admin intitle:login ',
-	'intitle:admin intitle:login ',
+	'inurl:admin OR intitle:admin +intitle:login ',
 	'allinurl:install.php OR upgrade.php ',
-	'inurl:admin.php OR inurl:administrator.php ',
+	'inurl:admin.php OR inurl:administrator.php OR inurl:cms.php ',
 	'ext:wsdl wsdl ',
 	'allinurl:"/*/_vti_pvt/" OR allinurl:"/*/_vti_cnf/" ',
 	'inurl:configuration.php-dist OR inurl:config.php.bak OR inurl:config.php.new ',
@@ -142,7 +139,7 @@ def dork(url, dork):
 
 	dorksoft = (
 	'"phpMyAdmin" "running on" inurl:"main.php" ',
-	'inurl:jmx-console ',
+	'inurl:jmx-console OR inurl:JMXInvokerServlet ',
 	'"Microsoft-IIS/* server at" intitle:index.of ',
 	'filetype:asmx inurl:(_vti_bin|api|webservice) ',
 	'intitle:"Apache Status" "Apache Server Status for" ',
