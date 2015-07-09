@@ -3,11 +3,11 @@
 Snitch is a tool which automate dorking process for specified domain. Using build-in dork categories, this tool helps gather informations about domain which can be found using search engines. It can be quite useful in early phases of pentest.
 
 
-*Todo
- _More search engines
+###Todo
+ * More search engines
 
 
-*Examples
+###Examples
 
 ```
 devil@hell:~/snitch$ python snitch.py
