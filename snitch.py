@@ -81,14 +81,11 @@ def dork(url, dork):
 	'intext:"MSSQL_OLEdb : Microsoft OLE DB Provider for SQL Server" OR intext:"MSSQL_Uqm : Unclosed quotation mark" ',
 	'intext:"MS-Access_ODBC : ODBC Microsoft Access Driver" OR intext:"MS-Access_JETdb : Microsoft JET Database" ',
 	'intext:"error in your SQL syntax" OR intext:"Error Occurred While Processing Request" ',
-	'intext:"mysql_num_rows()" OR intext:"mysql_fetch_array()" ',
+	'intext:"mysql_num_rows()" OR intext:"mysql_fetch_array()" OR intext:"mysql_fetch_row() ',
 	'intext:"Server Error in \'/\' Application" ',
-	'intext:"Microsoft OLE DB Provider for ODBC Drivers error" ',
-	'intext:"InvalidQuerystring" ',
-	'intext:"OLE DB Provider for ODBC" ',
-	'intext:"VBScript Runtime" ',
+	'intext:"Microsoft OLE DB Provider for ODBC Drivers error" OR intext:"InvalidQuerystring" ',
+	'intext:"OLE DB Provider for ODBC" OR intext:"VBScript Runtime" ',
 	'intext:"ADODB.Field" OR intext:"ADODB.Command" ',
-	'intext:"mysql_fetch_row()" ',
 	'intext:"Syntax error" OR intext:"GetArray()" OR intext:"FetchRow()" ',
 	'intext:"Input string was not in a correct format" ',
 	'intext:"Fatal error: Class \'Red_Action\' not found in" ',
@@ -107,8 +104,6 @@ def dork(url, dork):
 	dorkext = (
 	'ext:bak OR ext:old OR ext:tmp OR ext:inc OR ext:sql ',
 	'ext:log OR ext:conf OR ext:cfg OR ext:ini ',
-	'ext:inc OR ext:bak OR ext:old OR ext:conf OR ext:cfg OR ext:ini intext:mysql_connect OR intext:mysql_pconnect ',
-	'intext:"# phpMyAdmin MySQL-Dump" OR intext:"PostgreSQL database dump" ext:txt OR ext:sql '
 	)
 
 	dorkdoc = (
@@ -131,7 +126,7 @@ def dork(url, dork):
 	'allinurl:install.php OR upgrade.php ',
 	'inurl:admin.php OR inurl:administrator.php OR inurl:cms.php ',
 	'ext:wsdl wsdl ',
-	'allinurl:"/*/_vti_pvt/" OR allinurl:"/*/_vti_cnf/" ',
+	'allinurl:"/*/_vti_pvt/" OR allinurl:"/*/_vti_cnf/" PR allinurl:/xampp ',
 	'inurl:configuration.php-dist OR inurl:config.php.bak OR inurl:config.php.new ',
 	'ext:xml inurl:sitemap ',
 	'ext:zip OR ext:rar OR ext:gz OR ext:tar.gz '
