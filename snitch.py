@@ -122,7 +122,7 @@ def dork(url, dork):
 	'inurl:"smb.conf" intext:"workgroup" ext:conf ',
 	'intitle:"Index of" .mysql_history ',
 	'"Index of /backup" ',
-	'intitle:"Index of',
+	'intitle:"Index of ',
 	'inurl:server-status intext:"Apache" ',
 	'intitle:phpinfo "PHP Version" ',
 	'file:robots ext:txt ',
