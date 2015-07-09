@@ -45,7 +45,7 @@ Examples:
 ```
 
 ```
-devil@hell:~/Desktop/Python$ python snitch.py -I5 -P5 -D ext --url=gov -S 127.0.0.1:9050
+devil@hell:~/snitch$ python snitch.py -I5 -P5 -D ext --url=gov -S 127.0.0.1:9050
 [+] Target: gov
 [!] Using SOCKS5 (IP - XX.XX.XX.XX)
 [!] Interval set to 5 s
