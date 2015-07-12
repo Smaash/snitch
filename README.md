@@ -47,7 +47,7 @@ Examples:
 ```
 
 ```
-devil@hell:~/snitch/$ python dork.py -U gov -D ext -P20 -S 127.0.0.1:9050
+devil@hell:~/snitch/$ python snitch.py -U gov -D ext -P20 -S 127.0.0.1:9050
 [+] Target: gov
 [!] Using SOCKS5 (IP - XX.XX.XX.XX)
 [!] Pages limit set to 20
