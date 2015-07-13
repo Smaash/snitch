@@ -81,14 +81,12 @@ def find(dork):
   			pass
 
 		except ValueError:
-			if verbosity == 1: print "\n[!] Lost connection to Google API... \n[!] Switching method.\n"
+			if verbosity == 1: print "\n[!] Lost connection to Google API... \n[!] Switching to #2 method.\n"
 			method = 2
 			pass
 
-		if verbosity == 1: print "\n[!] Switching to #2 search method for more loot."
-
 	#2 - Search-Results
-	elif method == 2:
+	if method == 2:
 		try:
 			for i in range(0, limit):
 
@@ -122,14 +120,12 @@ def find(dork):
 			pass
 
 		except ValueError:
-			if verbosity == 1: print "\n[!] Lost connection to search-results... \n[!] Switching method.\n"
+			if verbosity == 1: print "\n[!] Lost connection to search-results... \n[!] Switching to #3 method.\n"
 			method = 3
 			pass
 
-		if verbosity == 1: print "\n[!] Switching to #3 search method for more loot."
-
 	#3 - Google Interia	
-	elif method == 3:
+	if method == 3:
 		try:
 			for i in range(0, limit):
 
@@ -140,7 +136,7 @@ def find(dork):
 				try:
 					response = urllib.urlopen(url)
 				except:
-					if verbosity == 1: print "\n[!]  Timeout connecting to Google Interia..."
+					if verbosity == 1: print "\n[!] Timeout connecting to Google Interia..."
 					exit()
 
 				results  = response.read()
@@ -178,6 +174,8 @@ def find(dork):
 					outfile.close()
 				except:
 					print "\n[!] Error writing to output file."
+
+
 
 
 def dork(url, dork):
@@ -416,7 +414,7 @@ else:
 
     	try:
     		ipres = urllib.urlopen('http://bot.whatismyipaddress.com/')
-    		print "[!] Using SOCKS5 (IP - %s)" % ipres.read()
+    		print "[!] Using SOCKS5 (%s)" % ipres.read()
     	except:
     		print "\n[!] SOCKS connection error"
     		exit()
