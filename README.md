@@ -1,6 +1,6 @@
 # snitch
 
-Snitch is a tool which automate dorking process for specified domain. Using build-in dork categories, this tool helps gather informations about domain which can be found using search engines. It can be quite useful in early phases of pentest.
+Snitch is a tool which automate information gathering process for specified domain. Using build-in dork categories, this tool helps gather specified informations domain which can be found using web search engines. It can be quite useful in early phases of pentest.
 
 ####Examples
 
