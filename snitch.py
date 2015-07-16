@@ -1,13 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# snitch v0.2
+# snitch v0.3
 # smash [at] devilteam [dot] pl
 # github.com/Smaash
 
+# Examples:
+# snitch.py --D ext,info -U gov -S 127.0.0.1:9050
+# snitch.py --url=site.com --dork=all -O /tmp/dorks -I5
+# snitch.py -C "site:edu ext:bak" -P3 -v
+
 try:
 	from optparse import OptionParser
-	import urllib, json, re, socks, socket, signal, time, random
+	import urllib, json, re, socks, socket, signal, time, random, sys
 except:
 	print "\n[!] Some python modules are missing!"
 	exit()
@@ -16,8 +21,8 @@ except:
 # Defaults
 
 interval  = 2  # Seconds between requests
-limit 	  = 10 # Search pages limit
 method    = 1  # Default search method to start
+limit 	  = 10 # Search pages limit (will notice end of results)
 
 
 # Functions
@@ -53,13 +58,20 @@ def find(dork):
 	#1 - Google AJAX API
 	if method == 1:
 		try:
+			if verbosity == 1: print "[~] Using Google API"
 			for i in range(0, limit):
 
 				time.sleep(interval)
 				query = urllib.urlencode({'q' : dork})
  				url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&%s&start=%i' % (query,i)
  				urllib.URLopener.version = random.choice(agents)
- 				response = urllib.urlopen(url)
+ 				try:
+ 					response = urllib.urlopen(url)
+ 				except:
+					if verbosity == 1: print "\n[!] Timeout connecting to Google API... \n[!] Switching method\n"
+					method += 1
+					break
+
  				results  = response.read()
  				res = json.loads(results) 
 
@@ -68,8 +80,8 @@ def find(dork):
  					pass
 
 	 			elif res['responseStatus'] == 403:
-					if verbosity == 1: print "\n[!] Temporary blocked on Google API.\n[!] Switching method.\n"
- 					method = 2
+					if verbosity == 1: print "\n[!] Temporary blocked on Google API.\n[!] Switching method\n"
+ 					method += 1
  					break
 
  				data = res['responseData']
@@ -77,17 +89,18 @@ def find(dork):
   				for h in hits: 
   					clear.append(urllib.unquote(h['url']))
 
-  			method = 2
+  			method += 1
   			pass
 
 		except ValueError:
-			if verbosity == 1: print "\n[!] Lost connection to Google API... \n[!] Switching to #2 method.\n"
-			method = 2
+			if verbosity == 1: print "\n[!] Lost connection to Google API... \n[!] Switching to next method\n"
+			method += 1
 			pass
 
 	#2 - Search-Results
 	if method == 2:
 		try:
+			if verbosity == 1: print "[~] Using Search-Results"
 			for i in range(0, limit):
 
 				time.sleep(interval)
@@ -97,8 +110,8 @@ def find(dork):
 				try:
 					response = urllib.urlopen(url)
 				except:
-					if verbosity == 1: print "\n[!] Timeout connecting to search-results... \n[!] Switching method.\n"
-					method = 3
+					if verbosity == 1: print "\n[!] Timeout connecting to Search-Results... \n[!] Switching method\n"
+					method += 1
 					break
 
 				results = response.read()
@@ -116,17 +129,97 @@ def find(dork):
 						else:
 							clear.append(url)
 
-			method = 3
+			method += 1
 			pass
 
 		except ValueError:
-			if verbosity == 1: print "\n[!] Lost connection to search-results... \n[!] Switching to #3 method.\n"
-			method = 3
+			if verbosity == 1: print "\n[!] Lost connection to search-results... \n[!] Switching to next method\n"
+			method += 1
 			pass
 
-	#3 - Google Interia	
+	#3 - Ask
 	if method == 3:
 		try:
+			if verbosity == 1: print "[~] Using Ask"
+			for i in range(0, limit):
+
+				time.sleep(interval)
+				url = 'http://www.ask.com/web?q=%s&page=%i' % (urllib.quote(dork), i)
+				urllib.URLopener.version = random.choice(agents)
+
+				try:
+					response = urllib.urlopen(url)
+				except:
+					if verbosity == 1: print "\n[!] Timeout connecting to Ask... \n[!] Switching method.\n"
+					method += 1
+					break	
+
+				results = response.read()
+
+				if re.search('Your search for', results) and re.search('did not match with any Answers results', results):
+					i += 666
+					pass
+
+				urls = re.findall('(?<=href=")(.*?)(?=")', results)
+
+				for url in urls:
+					if 'http' in url or 'https' in url:
+						if re.search('ask.com', url):
+							pass
+						else:
+							clear.append(url)
+
+			method += 1
+			pass				
+
+		except ValueError:
+			if verbosity == 1: print "\n[!] Lost connection to Ask... \n[!] Switching to next method\n"
+			method += 1
+			pass
+
+	#4 - MyWebSearch
+	if method == 4:
+		try:
+			if verbosity == 1: print "[~] Using MyWebSearch"
+			for i in range(0, limit):
+
+				time.sleep(interval)
+				url = 'http://int.search.mywebsearch.com/mywebsearch/GGweb.jhtml?searchfor=%s&pn=%i' % (urllib.quote(dork), i)
+				urllib.URLopener.version = random.choice(agents)
+				try:
+					response = urllib.urlopen(url)
+				except:
+					if verbosity == 1: print "\n[!] Timeout connecting to MyWebSearch... \n[!] Switching method\n"
+					method += 1
+					break	
+
+				results = response.read()
+
+				if re.search('Your search for', results) and re.search('did not match with any results', results):
+					i += 666
+					pass
+
+				urls = re.findall('(?<=href=")(.*?)(?=")', results)
+
+				for url in urls:
+					if 'http' in url or 'https' in url:
+						if re.search('mywebsearch', url) or re.search('imgfarm.com', url):
+							pass
+						else:
+							clear.append(url)
+
+			method += 1
+			pass	
+
+		except ValueError:
+			if verbosity == 1: print "\n[!] Lost connection to MyWebSearch..."
+			method += 1
+			pass
+
+	#5 - Google Interia	
+	if method == 5:
+		try:
+			if verbosity == 1: print "[~] Using Google Interia"
 			for i in range(0, limit):
 
 				time.sleep(interval)
@@ -149,10 +242,10 @@ def find(dork):
 
 				for url in urls:
 					if 'http' in url or 'https' in url:
-						if re.search('interia', url):
+						if re.search('interia', url) or re.search("\/szukaj\/kopia,id", url):
 							pass
 						else:
-							clear.append(url)
+								clear.append(url)
 
 		except ValueError:
 			if verbosity == 1: print "\n[!] Lost connection to Google Interia..."
@@ -163,7 +256,7 @@ def find(dork):
 		exit()
 
   	for y in set(clear):
-  		if re.search('facebook', y) or re.search('stackoverflow', y):
+  		if re.search('facebook', y) or re.search('stackoverflow.com', y) or re.search('php.net', y) or re.search('drupal.org', y) or re.search('wordpress.org', y) or re.search('youtube.org', y):
   			pass
   		else:
 			print y
@@ -176,18 +269,15 @@ def find(dork):
 					print "\n[!] Error writing to output file."
 
 
-
-
 def dork(url, dork):
 
 	dorkleak = (
-
 	#MySQL
 	'intext:"supplied argument is not a valid MySQL result resource" OR intext:"You have an error in your SQL syntax" ',
 	'"Unable to jump to row" "on MySQL result index" "on line" ',
 	'intext:"mysql_fetch_assoc()" OR intext:"mysql_fetch_object()" OR intext:"mysql_numrows()" ',
 	'intext:"mysql_fetch_array()" OR intext:"mysql_fetch_row() OR intext:"mysql_query() ',
-	'intext:"Warning: mysql_connect(): Access denied for user: \'*@*" "on line" -help -forum ',	
+	'intext:"Warning: mysql_connect(): Access denied for user: \'*@*" "on line" ',	
 	'intext:"error in your SQL syntax" OR intext:"Error Occurred While Processing Request" ',
 
 	#IBM
@@ -215,7 +305,7 @@ def dork(url, dork):
 	'ext:asp "[ODBC SQL" ',
 	'intext:"ADODB.Field" OR intext:"ADODB.Command" ',
 	'intext:"Input string was not in a correct format" ',
-	'intext: inurl:"*.php?*=*.php" intext:"Warning: include" -inurl:.html -site:"php.net" -inurl:"*forums*" ', 
+	'intext: inurl:"*.php?*=*.php" intext:"Warning: include" -inurl:.html ', 
 	'intext:"Warning:" "failed to open stream: HTTP request failed" "on line" ',
 	'intext:"Fatal error: Class \'Red_Action\' not found in" ',
 	'intext:"[function.getimagesize]: failed to open stream: No such file or directory in " ',
@@ -224,7 +314,6 @@ def dork(url, dork):
 	)
 
 	dorkfile = (
-
 	#Dirs
 	'intitle:"Index of" OR "Index of /backup" ',
 	'intitle:"Index of" .mysql_history OR intitle:index.of ws_ftp.ini OR intitle:index.of .bash_history ',
@@ -248,11 +337,9 @@ def dork(url, dork):
 	'file:crossdomain ext:xml ',	
 	'inurl:sitemap ext:xml ',
 	'ext:wsdl wsdl '
-
 	)
 
 	dorksoft = (
-
 	#Generic
 	'"index of" intext:fckeditor inurl:fckeditor ',
 	'inurl:/tiny_mce/plugins/filemanager/ OR inurl:"tiny_mce/plugins/tinybrowser/" ',
@@ -310,7 +397,6 @@ def dork(url, dork):
 	'intext:"Powered by: vBulletin" OR intext:"Powered By IP.Board" OR intext:"software by XenForo" ',
 	'intext:"Powered by MyBB" OR intext:"powered by MyBulletinBoard" ',
 	'intext:"Powered by phpBB" OR intext:"Powered by PunBB" OR intext:"Powered by SMF" '
-
 	)
 
 	dorkext = (
@@ -324,10 +410,9 @@ def dork(url, dork):
 	'ext:msg OR ext:eml '
 	)
 
-
 	for x in dork.split(','):
 		if x == 'info' or x == 'all': 
-			print "\n[+] Looking for information leaks\n"
+			print "\n[+] Looking for information leaks" "\n"
 			for y in dorkleak: 
 				find(y+"site:"+url)
 		elif x == 'ext' or x == 'all': 
@@ -361,47 +446,41 @@ def setproxy(ip, port):
 		print "Invalid proxy IP address / port."
 		exit()
 
-
 # Main
 
 signal.signal(signal.SIGINT, signal_handler)
 prs = OptionParser()
 
-prs.add_option("-U", "--url", dest="url", type="string", help="domain(s) or domain extension(s) separated by comma *", metavar="[url]")
-prs.add_option("-D", "--dork", dest="dork", type="string", help="dork type(s) separated by comma *", metavar="[type]")
+prs.add_option("-U", "--url", dest="url", type="string", help="domain(s) or domain extension(s) separated by comma*", metavar="[url]")
+prs.add_option("-D", "--dork", dest="dork", type="string", help="dork type(s) separated by comma*", metavar="[type]")
+prs.add_option("-C", "--custom", dest="custom", type="string", help="custom dork*", metavar="[dork]")
 prs.add_option("-O", "--output", dest="output", type="string", help="output file", metavar="[file]")
 prs.add_option("-S", "--socks", dest="socks", type="string", help="socks5 proxy", metavar="[ip:port]")
 prs.add_option("-I", "--interval", dest="interval", type="int", help="interval between requests, %is by default" % interval, metavar="[seconds]")
 prs.add_option("-P", "--pages", dest="pages", type="int", help="pages to retrieve, %i by default" % limit, metavar="[pages]")
 prs.add_option("-v", dest="verb", action="store_true", help="turn on verbosity", metavar=" ")
 
-(options, args)=prs.parse_args()
+(options, args) = prs.parse_args()
 
-if options.url == None or options.dork == None:
+if len(sys.argv) == 1:
 	print """
 		               _ __       __  
 		   _________  (_) /______/ /_ 
 		  / ___/ __ \/ / __/ ___/ __ \ 
 		 (__  ) / / / / /_/ /__/ / / /
-		/____/_/ /_/_/\__/\___/_/ /_/ ~0.2   
+		/____/_/ /_/_/\__/\___/_/ /_/ ~0.3   
 		  """
 	prs.print_help()
 	print """
-Dork types:
-  info  | Information leak & Potential web bugs
-  ext   | Sensitive extensions
-  docs  | Documents & Messages
-  files | Files & Directories
-  soft  | Web software
-  all   | All
-
-Examples:
-  """+__file__+""" -I5 -P3 --dork=ext,info -U gov -S 127.0.0.1:9050
-  """+__file__+""" --url=site.com -D all -O /tmp/dorks
-  """
+ Dork types:
+  info   Information leak & Potential web bugs
+  ext    Sensitive extensions
+  docs   Documents & Messages
+  files  Files & Directories
+  soft   Web software
+  all    All
+  		  """
 else:
-
-    print("[+] Target: "+options.url)
 
     if options.socks != None:
     	try:
@@ -411,7 +490,6 @@ else:
     	except:
     		print "\n[!] Wrong SOCKS address"
     		exit()
-
     	try:
     		ipres = urllib.urlopen('http://bot.whatismyipaddress.com/')
     		print "[!] Using SOCKS5 (%s)" % ipres.read()
@@ -437,9 +515,16 @@ else:
     	print "[!] Output set to",options.output
     	output = options.output
     else:
-    	output = 0   	
+    	output = 0   
+
+
+	if options.custom != None and options.url == None:
+		print "[+] Using custom search"
+		find(options.custom)
 
     if options.url != None and options.dork != None:
-		dork(options.url, options.dork)
-		print "\n[+] Done!"
+    	print "[+] Target: " + options.url
+    	for i in options.url.split(","):
+			dork(i, options.dork)
 
+	print "\n[+] Done!"
