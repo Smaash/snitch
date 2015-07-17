@@ -437,7 +437,6 @@ def dork(url, dork):
 			exit()
 
 
-
 def setproxy(ip, port):
 	try:
 		socket.inet_aton(ip)
