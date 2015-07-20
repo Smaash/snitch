@@ -12,10 +12,15 @@
 
 try:
 	from optparse import OptionParser
-	import urllib, json, re, socks, socket, signal, time, random, sys
+	import urllib, json, re, socket, signal, time, random, sys
 except:
 	print "\n[!] Some python modules are missing!"
 	exit()
+
+try:
+	import socks
+except:
+	print "\n[!] Socks module is missing!"
 
 
 # Defaults
@@ -54,7 +59,7 @@ def find(dork):
 	"Mozilla/5.0 (compatible; Konqueror/3.5; Linux) KHTML/3.5.5 (like Gecko) (Kubuntu)",
 	"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)"
 		      ]
-	
+
 	#1 - Google AJAX API
 	if method == 1:
 		try:
@@ -73,7 +78,7 @@ def find(dork):
 					break
 
  				results  = response.read()
- 				res = json.loads(results) 
+ 				res = json.loads(results)
 
 	 			if res['responseStatus'] == 400:
  					i += 666
@@ -86,7 +91,7 @@ def find(dork):
 
  				data = res['responseData']
   				hits = data['results']
-  				for h in hits: 
+  				for h in hits:
   					clear.append(urllib.unquote(h['url']))
 
   			method += 1
@@ -152,7 +157,7 @@ def find(dork):
 				except:
 					if verbosity == 1: print "\n[!] Timeout connecting to Ask... \n[!] Switching method.\n"
 					method += 1
-					break	
+					break
 
 				results = response.read()
 
@@ -170,7 +175,7 @@ def find(dork):
 							clear.append(url)
 
 			method += 1
-			pass				
+			pass
 
 		except ValueError:
 			if verbosity == 1: print "\n[!] Lost connection to Ask... \n[!] Switching to next method\n"
@@ -191,7 +196,7 @@ def find(dork):
 				except:
 					if verbosity == 1: print "\n[!] Timeout connecting to MyWebSearch... \n[!] Switching method\n"
 					method += 1
-					break	
+					break
 
 				results = response.read()
 
@@ -209,14 +214,14 @@ def find(dork):
 							clear.append(url)
 
 			method += 1
-			pass	
+			pass
 
 		except ValueError:
 			if verbosity == 1: print "\n[!] Lost connection to MyWebSearch..."
 			method += 1
 			pass
 
-	#5 - Google Interia	
+	#5 - Google Interia
 	if method == 5:
 		try:
 			if verbosity == 1: print "[~] Using Google Interia"
@@ -277,12 +282,12 @@ def dork(url, dork):
 	'"Unable to jump to row" "on MySQL result index" "on line" ',
 	'intext:"mysql_fetch_assoc()" OR intext:"mysql_fetch_object()" OR intext:"mysql_numrows()" ',
 	'intext:"mysql_fetch_array()" OR intext:"mysql_fetch_row() OR intext:"mysql_query() ',
-	'intext:"Warning: mysql_connect(): Access denied for user: \'*@*" "on line" ',	
+	'intext:"Warning: mysql_connect(): Access denied for user: \'*@*" "on line" ',
 	'intext:"error in your SQL syntax" OR intext:"Error Occurred While Processing Request" ',
 
 	#IBM
 	'intext:"detected an internal error [IBM][CLI Driver][DB2/****]" ',
-	
+
 	#MS
 	'intext:"MSSQL_OLEdb : Microsoft OLE DB Provider for SQL Server" OR intext:"MSSQL_Uqm : Unclosed quotation mark" ',
 	'intext:"MS-Access_ODBC : ODBC Microsoft Access Driver" OR intext:"MS-Access_JETdb : Microsoft JET Database" ',
@@ -305,7 +310,7 @@ def dork(url, dork):
 	'ext:asp "[ODBC SQL" ',
 	'intext:"ADODB.Field" OR intext:"ADODB.Command" ',
 	'intext:"Input string was not in a correct format" ',
-	'intext: inurl:"*.php?*=*.php" intext:"Warning: include" -inurl:.html ', 
+	'intext: inurl:"*.php?*=*.php" intext:"Warning: include" -inurl:.html ',
 	'intext:"Warning:" "failed to open stream: HTTP request failed" "on line" ',
 	'intext:"Fatal error: Class \'Red_Action\' not found in" ',
 	'intext:"[function.getimagesize]: failed to open stream: No such file or directory in " ',
@@ -334,7 +339,7 @@ def dork(url, dork):
 
 	#Info
 	'file:robots ext:txt ',
-	'file:crossdomain ext:xml ',	
+	'file:crossdomain ext:xml ',
 	'inurl:sitemap ext:xml ',
 	'ext:wsdl wsdl '
 	)
@@ -411,26 +416,26 @@ def dork(url, dork):
 	)
 
 	for x in dork.split(','):
-		if x in 'all,info,ext,docs,files,soft': 
-			if x == 'info' or x == 'all': 
+		if x in 'all,info,ext,docs,files,soft':
+			if x == 'info' or x == 'all':
 				print "\n[+] Looking for information leaks" "\n"
-				for y in dorkleak: 
+				for y in dorkleak:
 					find(y+"site:"+url)
-			if x == 'ext' or x == 'all': 
+			if x == 'ext' or x == 'all':
 				print "\n[+] Looking for sensitive extensions\n"
-				for y in dorkext: 
+				for y in dorkext:
 					find(y+"site:"+url)
-			if x == 'docs' or x == 'all': 
+			if x == 'docs' or x == 'all':
 				print "\n[+] Looking for documents and messages\n"
-				for y in dorkdoc: 
+				for y in dorkdoc:
 					find(y+"site:"+url)
-			if x == 'files' or x == 'all': 
+			if x == 'files' or x == 'all':
 				print "\n[+] Looking for files and directories\n"
-				for y in dorkfile: 
+				for y in dorkfile:
 					find(y+"site:"+url)
-			if x == 'soft' or x == 'all': 
+			if x == 'soft' or x == 'all':
 				print "\n[+] Looking for web software\n"
-				for y in dorksoft: 
+				for y in dorksoft:
 					find(y+"site:"+url)
 		else:
 			print "\n[!] Wrong dork type specified!"
@@ -465,11 +470,11 @@ prs.add_option("-v", dest="verb", action="store_true", help="turn on verbosity",
 
 if len(sys.argv) == 1:
 	print """
-		               _ __       __  
-		   _________  (_) /______/ /_ 
-		  / ___/ __ \/ / __/ ___/ __ \ 
+		               _ __       __
+		   _________  (_) /______/ /_
+		  / ___/ __ \/ / __/ ___/ __ \
 		 (__  ) / / / / /_/ /__/ / / /
-		/____/_/ /_/_/\__/\___/_/ /_/ ~0.3   
+		/____/_/ /_/_/\__/\___/_/ /_/ ~0.3
 		  """
 	prs.print_help()
 	print """
@@ -506,17 +511,17 @@ else:
 
     if options.interval != None:
     	print "[!] Interval set to",options.interval,"s"
-    	interval = options.interval    	
+    	interval = options.interval
 
     if options.pages != None:
     	print "[!] Pages limit set to",options.pages
-    	limit = options.pages  
+    	limit = options.pages
 
     if options.output != None:
     	print "[!] Output set to",options.output
     	output = options.output
     else:
-    	output = 0   
+    	output = 0
 
 
 	if options.custom != None and options.url == None:
