@@ -106,6 +106,8 @@ http://lambda.gsfc.nasa.gov/data/suborbital/BICEP2/B2_3yr_camb_planck_withB_para
 
 
 ####Changelog
+######0.3.2
+	- Fixed 'socks' import error
 ######0.3.1
 	- Fixed 'dork type' iteration with the 'all' value
 ######0.3
