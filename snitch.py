@@ -272,7 +272,7 @@ def find(dork):
 					outfile.close()
 				except:
 					print "\n[!] Error writing to output file."
-					
+
 	exit()
 
 
@@ -418,27 +418,27 @@ def dork(url, dork):
 	)
 
 	for x in dork.split(','):
-		if x in 'all,info,ext,docs,files,soft':
-			if x == 'info' or x == 'all':
-				print "\n[+] Looking for information leaks" "\n"
-				for y in dorkleak:
-					find(y+"site:"+url)
-			if x == 'ext' or x == 'all':
-				print "\n[+] Looking for sensitive extensions\n"
-				for y in dorkext:
-					find(y+"site:"+url)
-			if x == 'docs' or x == 'all':
-				print "\n[+] Looking for documents and messages\n"
-				for y in dorkdoc:
-					find(y+"site:"+url)
-			if x == 'files' or x == 'all':
-				print "\n[+] Looking for files and directories\n"
-				for y in dorkfile:
-					find(y+"site:"+url)
-			if x == 'soft' or x == 'all':
-				print "\n[+] Looking for web software\n"
-				for y in dorksoft:
-					find(y+"site:"+url)
+		if x == 'info' or x == 'all':
+			print "\n[+] Looking for information leaks" "\n"
+			for y in dorkleak:
+				find(y+"site:"+url)
+		if x == 'ext' or x == 'all':
+			print "\n[+] Looking for sensitive extensions\n"
+			for y in dorkext:
+				find(y+"site:"+url)
+		if x == 'docs' or x == 'all':
+			print "\n[+] Looking for documents and messages\n"
+			for y in dorkdoc:
+				find(y+"site:"+url)
+		if x == 'files' or x == 'all':
+			print "\n[+] Looking for files and directories\n"
+			for y in dorkfile:
+				find(y+"site:"+url)
+		if x == 'soft' or x == 'all':
+			print "\n[+] Looking for web software\n"
+			for y in dorksoft:
+				find(y+"site:"+url)
+
 		else:
 			print "\n[!] Wrong dork type specified!"
 			exit()
