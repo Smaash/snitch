@@ -14,7 +14,9 @@ try:
 	from optparse import OptionParser
 	import urllib, json, re, socket, signal, time, random, sys
 except:
-	print "\n[!] Some python modules are missing!"
+	print "\nPython socks library is missing!"
+	print
+	print "Install it via 'sudo pip install pysocks'."
 	exit()
 
 try:
