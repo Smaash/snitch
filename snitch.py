@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# snitch v0.3
+# snitch v0.3.2
 # smash [at] devilteam [dot] pl
 # github.com/Smaash
 
