@@ -272,6 +272,8 @@ def find(dork):
 					outfile.close()
 				except:
 					print "\n[!] Error writing to output file."
+					
+	exit()
 
 
 def dork(url, dork):
