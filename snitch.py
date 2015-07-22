@@ -208,7 +208,7 @@ def find(dork):
 
 				for url in urls:
 					if 'http' in url or 'https' in url:
-						if re.search('mywebsearch', url) or re.search('imgfarm.com', url):
+						if re.search('mywebsearch', url) or re.search('imgfarm.com', url) or re.search('eula.mindspark.com', url):
 							pass
 						else:
 							clear.append(url)
