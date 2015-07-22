@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 # snitch v0.3.2
-# smash [at] devilteam [dot] pl
-# github.com/Smaash
 
 # Examples:
 # snitch.py --D ext,info -U gov -S 127.0.0.1:9050
@@ -273,6 +271,7 @@ def find(dork):
 				except:
 					print "\n[!] Error writing to output file."
 
+	print "\n[+] Done!"
 	exit()
 
 
@@ -534,5 +533,3 @@ else:
     	print "[+] Target: " + options.url
     	for i in options.url.split(","):
 			dork(i, options.dork)
-
-	print "\n[+] Done!"
