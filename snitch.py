@@ -271,7 +271,7 @@ def find(dork):
 				except:
 					print "\n[!] Error writing to output file."
 
-	print "\n[+] Done!"
+	print "\n[+] Done!\n"
 	exit()
 
 
