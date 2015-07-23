@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # snitch v0.3.2
+# github.com/Smaash
 
 # Examples:
 # snitch.py --D ext,info -U gov -S 127.0.0.1:9050
@@ -233,7 +234,7 @@ def find(dork):
 					response = urllib.urlopen(url)
 				except:
 					if verbosity == 1: print "\n[!] Timeout connecting to Google Interia..."
-					exit()
+					method = 1
 
 				results  = response.read()
 
@@ -250,9 +251,11 @@ def find(dork):
 						else:
 								clear.append(url)
 
+				method = 1
+
 		except ValueError:
 			if verbosity == 1: print "\n[!] Lost connection to Google Interia..."
-			exit()
+			method = 1
 
 	else:
 		print "\n[!] Wrong method."
@@ -270,10 +273,6 @@ def find(dork):
 					outfile.close()
 				except:
 					print "\n[!] Error writing to output file."
-
-	print "\n[+] Done!\n"
-	exit()
-
 
 def dork(url, dork):
 
@@ -417,26 +416,27 @@ def dork(url, dork):
 	)
 
 	for x in dork.split(','):
-		if x == 'info' or x == 'all':
-			print "\n[+] Looking for information leaks" "\n"
-			for y in dorkleak:
-				find(y+"site:"+url)
-		if x == 'ext' or x == 'all':
-			print "\n[+] Looking for sensitive extensions\n"
-			for y in dorkext:
-				find(y+"site:"+url)
-		if x == 'docs' or x == 'all':
-			print "\n[+] Looking for documents and messages\n"
-			for y in dorkdoc:
-				find(y+"site:"+url)
-		if x == 'files' or x == 'all':
-			print "\n[+] Looking for files and directories\n"
-			for y in dorkfile:
-				find(y+"site:"+url)
-		if x == 'soft' or x == 'all':
-			print "\n[+] Looking for web software\n"
-			for y in dorksoft:
-				find(y+"site:"+url)
+		if x in 'all,info,ext,docs,files,soft': 
+			if x == 'info' or x == 'all':
+				print "\n[+] Looking for information leaks" "\n"
+				for y in dorkleak:
+					find(y+"site:"+url)
+			if x == 'ext' or x == 'all':
+				print "\n[+] Looking for sensitive extensions\n"
+				for y in dorkext:
+					find(y+"site:"+url)
+			if x == 'docs' or x == 'all':
+				print "\n[+] Looking for documents and messages\n"
+				for y in dorkdoc:
+					find(y+"site:"+url)
+			if x == 'files' or x == 'all':
+				print "\n[+] Looking for files and directories\n"
+				for y in dorkfile:
+					find(y+"site:"+url)
+			if x == 'soft' or x == 'all':
+				print "\n[+] Looking for web software\n"
+				for y in dorksoft:
+					find(y+"site:"+url)
 
 		else:
 			print "\n[!] Wrong dork type specified!"
@@ -533,3 +533,5 @@ else:
     	print "[+] Target: " + options.url
     	for i in options.url.split(","):
 			dork(i, options.dork)
+
+	print "\n[+] Done!\n"
