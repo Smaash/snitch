@@ -25,7 +25,6 @@ except:
 # Defaults
 
 interval  = 2  # Seconds between requests
-method    = 1  # Default search method to start
 limit 	  = 10 # Search pages limit (will notice end of results)
 
 
@@ -40,10 +39,10 @@ def find(dork):
 
 	global output
 	global limit
-	global method
 	global interval
 	global verbosity
 
+	method = 1
 	clear  = []
 	agents = [
 	"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3",
@@ -251,11 +250,8 @@ def find(dork):
 						else:
 								clear.append(url)
 
-				method = 1
-
 		except ValueError:
 			if verbosity == 1: print "\n[!] Lost connection to Google Interia..."
-			method = 1
 
 	else:
 		print "\n[!] Wrong method."
@@ -273,6 +269,9 @@ def find(dork):
 					outfile.close()
 				except:
 					print "\n[!] Error writing to output file."
+
+	method = 1
+	return
 
 def dork(url, dork):
 
