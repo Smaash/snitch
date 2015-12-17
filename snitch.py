@@ -11,7 +11,7 @@
 
 try:
 	from optparse import OptionParser
-	import urllib, json, re, socket, signal, time, random, sys
+	import urllib, json, re, socket, signal, time, random, subprocess, sys
 except:
 	print "\n[!] Some python modules are missing!"
 	exit()
@@ -415,7 +415,7 @@ def dork(url, dork):
 	)
 
 	for x in dork.split(','):
-		if x in 'all,info,ext,docs,files,soft': 
+		if x in 'all,info,ext,docs,files,soft,whois': 
 			if x == 'info' or x == 'all':
 				print "\n[+] Looking for information leaks" "\n"
 				for y in dorkleak:
@@ -436,11 +436,12 @@ def dork(url, dork):
 				print "\n[+] Looking for web software\n"
 				for y in dorksoft:
 					find(y+"site:"+url)
-
+			if x == 'whois' or x == 'all':
+				print "\n[+] Looking for domain register\n"
+				subprocess.call(['whois', url])
 		else:
 			print "\n[!] Wrong dork type specified!"
 			exit()
-
 
 def setproxy(ip, port):
 	try:
@@ -484,6 +485,7 @@ if len(sys.argv) == 1:
   docs   Documents & Messages
   files  Files & Directories
   soft   Web software
+  whois  Information about domain owner
   all    All
   		  """
 else:
