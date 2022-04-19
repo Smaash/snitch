@@ -1,13 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# snitch v0.3.2
-# github.com/Smaash
+# intruder v1
+# github.com/Abbasi0Abolfazl
 
-# Examples:
-# snitch.py --D ext,info -U gov -S 127.0.0.1:9050
-# snitch.py --url=site.com --dork=all -O /tmp/dorks -I5
-# snitch.py -C "site:edu ext:bak" -P3 -v
+
 
 try:
 	from optparse import OptionParser
